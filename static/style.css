@@ -1,0 +1,159 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: #f4f6f9;
+    color: #2c3e50;
+}
+
+header {
+    background: #1f2937;
+    color: white;
+    padding: 25px;
+    text-align: center;
+}
+
+header p {
+    margin-top: 5px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.upload-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+label {
+    font-weight: 600;
+}
+
+input[type="file"], textarea {
+    padding: 10px;
+    font-size: 14px;
+}
+
+textarea {
+    min-height: 130px;
+}
+
+button {
+    background: #2563eb;
+    color: white;
+    padding: 12px;
+    font-size: 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1e40af;
+}
+
+#loading {
+    display: none;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #d97706;
+}
+
+.result-section {
+    display: none;
+    margin-top: 40px;
+}
+
+.score-card {
+    background: #ecfeff;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+
+.score-box {
+    font-size: 48px;
+    font-weight: bold;
+    color: #0f766e;
+    margin-top: 10px;
+}
+
+.result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.result-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+
+.result-card.full {
+    margin-top: 25px;
+}
+
+h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+pre {
+    white-space: pre-wrap;
+    background: #f9fafb;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+pre.error {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+pre.warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+pre.info {
+    background: #dbeafe;
+    color: #1e40af;
+}
+@media (max-width: 768px) {
+    .result-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #2563eb;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

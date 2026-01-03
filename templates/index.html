@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Career Path & ATS Audit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <div class="max-w-4xl mx-auto py-12 px-4">
+        
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-bold text-slate-800">Career <span class="text-blue-600">Intelligence</span></h1>
+            <p class="text-slate-500">Professional ATS scoring and personalized job matching.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 mb-8">
+            <form id="auditForm" class="flex flex-col md:flex-row gap-4">
+                <input type="file" id="resume" accept=".pdf" required 
+                    class="flex-1 text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                <button type="submit" id="btn" class="bg-blue-600 text-white px-8 py-2 rounded-full font-bold hover:bg-blue-700 transition shadow-md shadow-blue-100">
+                    Analyze Resume
+                </button>
+            </form>
+        </div>
+
+        <div id="results" class="hidden space-y-6">
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 text-center">
+                    <span class="text-xs font-bold text-slate-400 uppercase">ATS Score</span>
+                    <div id="score" class="text-4xl font-black text-blue-600 mt-2">0</div>
+                </div>
+                
+                <div class="md:col-span-2 bg-gradient-to-br from-blue-600 to-indigo-700 p-6 rounded-2xl text-white">
+                    <h3 class="text-sm font-bold uppercase opacity-80 mb-3"><i class="fas fa-briefcase mr-2"></i>Recommended Roles</h3>
+                    <div id="recs" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-green-100 text-green-600 rounded-full flex items-center justify-center mr-2 text-xs"><i class="fas fa-check"></i></span>
+                        Strengths
+                    </h3>
+                    <ul id="strengths" class="text-sm text-slate-600 space-y-2 list-disc pl-5"></ul>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-4 flex items-center">
+                        <span class="w-8 h-8 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mr-2 text-xs"><i class="fas fa-arrow-up"></i></span>
+                        Improvements
+                    </h3>
+                    <ul id="improvements" class="text-sm text-slate-600 space-y-2 list-disc pl-5"></ul>
+                </div>
+            </div>
+        </div>
+        
+        <div id="loader" class="hidden text-center py-20">
+            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p class="text-slate-400 italic">Processing your career data...</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('auditForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn');
+            const results = document.getElementById('results');
+            const loader = document.getElementById('loader');
+
+            btn.disabled = true;
+            results.classList.add('hidden');
+            loader.classList.remove('hidden');
+
+            const fd = new FormData();
+            fd.append('resume', document.getElementById('resume').files[0]);
+
+            try {
+                const res = await fetch('/analyze', { method: 'POST', body: fd });
+                const data = await res.json();
+
+                if (!res.ok) throw new Error(data.error);
+
+                document.getElementById('score').innerText = data.ats_score + '%';
+                
+                // Job Recommendations Tags
+                document.getElementById('recs').innerHTML = data.job_recommendations.map(job => 
+                    `<span class="bg-white/20 backdrop-blur-sm border border-white/30 px-3 py-1 rounded-lg text-xs font-medium">${job}</span>`
+                ).join('');
+
+                const renderList = (id, items) => {
+                    document.getElementById(id).innerHTML = items.map(i => `<li>${i}</li>`).join('');
+                };
+                renderList('strengths', data.strengths);
+                renderList('improvements', data.improvements);
+
+                results.classList.remove('hidden');
+            } catch (err) {
+                alert("Error: " + err.message);
+            } finally {
+                btn.disabled = false;
+                loader.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
